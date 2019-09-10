@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import { 
+  Collapse, 
+  Container, 
+  Navbar, 
+  NavbarBrand, 
+  NavbarToggler, 
+  NavItem, 
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem 
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
-import { GetAllUsers } from './admin/GetAllUsers';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -34,18 +45,52 @@ export class NavMenu extends Component {
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/">Inicio</NavLink>
                 </NavItem>
+
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
+                  <NavLink tag={Link} className="text-dark" to="/registerCompany"> Registrar Empresa</NavLink>
                 </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/register"> Registro</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/getAllUsers"> Ver Usuarios</NavLink>
-                </NavItem>
+
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret>
+                    Usuarios
+                  </DropdownToggle>
+                  <DropdownMenu right>
+
+                    <DropdownItem>
+                      <NavLink tag={Link} className="text-dark" to="/register"> Registro</NavLink>
+                    </DropdownItem>
+
+                    <DropdownItem>
+                      <NavLink tag={Link} className="text-dark" to="/getAllUsers"> Ver Usuarios</NavLink>
+                    </DropdownItem>
+
+                    <DropdownItem>
+                      <NavLink tag={Link} className="text-dark" to="/getUsersId"> Buscar un usuario</NavLink>
+                    </DropdownItem>
+
+                    <DropdownItem>
+                      <NavLink tag={Link} className="text-dark" to="/updateUser"> Actuliazar usuario</NavLink>
+                    </DropdownItem>
+
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret>
+                    Empresa
+                  </DropdownToggle>
+                  <DropdownMenu right>
+
+                    <DropdownItem>
+                      <NavLink tag={Link} className="text-dark" to="/getAllCompanies"> Ver Clientes</NavLink>
+                    </DropdownItem>
+
+                    <DropdownItem>
+                      <NavLink tag={Link} className="text-dark" to="/getCompanyRut"> Buscar Cliente</NavLink>
+                    </DropdownItem>
+
+                  </DropdownMenu>
+                </UncontrolledDropdown>
               </ul>
             </Collapse>
           </Container>

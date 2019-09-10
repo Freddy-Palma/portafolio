@@ -39,6 +39,7 @@ export class GetAllUsers extends Component {
             <Table>
                 <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Email</th>
@@ -51,6 +52,7 @@ export class GetAllUsers extends Component {
                         this.state.data.map(element => {
                             return (
                                 <tr>
+                                    <td>{ element.id }</td>
                                     <td>{ element.name }</td>
                                     <td>{ element.lastname }</td>
                                     <td>{ element.email }</td>

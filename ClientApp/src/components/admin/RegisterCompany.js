@@ -2,17 +2,19 @@ import React, { Component } from 'react';
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import {Link, Redirect} from 'react-router-dom';
 
-export class Register extends Component {
+export class RegisterCompany extends Component {
 
     constructor(props){
       super(props);
       this.state = {
         formValues: {
-          name: '',
-          lastName: '',
+          rut: '',
+          social_reason: '',
           email: '',
+          address: '',
+          comercial_business: '',
           phone: '',
-          id_role: '1',
+          id_role: '3',
           password: ''
         },
         isRegister : false
@@ -20,7 +22,6 @@ export class Register extends Component {
     }
 
     handleChange = (name) => (event) => {
-      console.log(this.state.formValues.id_role);
       const { formValues } = this.state;
       formValues[name] = event.target.value;
       this.setState({ formValues });
@@ -28,14 +29,14 @@ export class Register extends Component {
 
     handleSubmit(event){ 
         event.preventDefault();
-        fetch("http://localhost:51424/api/Users/register", {
+        fetch("http://localhost:51424/api/Companies/register", {
           method: 'post',
           mode: 'cors',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify(this.state.formValues)
         })
         .then((response) => response.json())
-        .then((json) => this.setState({ isRegister: json.success}));
+        .then((json) => this.setState({ isLogged: json.success}));
     };
 
   render () {
@@ -48,30 +49,30 @@ export class Register extends Component {
     return (
       <div>
         <Form onSubmit={this.handleSubmit.bind(this)}>
-        <h1> Registra un Usuario </h1>            
+        <h1> Registra la Empresa </h1>            
         <FormGroup>
-            <Label for="name">Nombre</Label>
+            <Label for="rut">RUT</Label>
             <Input 
-              type="text" 
+              type="number" 
               required 
-              name="name" 
-              id="name" 
-              placeholder="Nombre" 
-              onChange={this.handleChange('name')} 
-              value={this.state.formValues.name}
+              name="rut" 
+              id="rut" 
+              placeholder="RUT" 
+              onChange={this.handleChange('rut')} 
+              value={this.state.formValues.rut}
             />
         </FormGroup>
 
         <FormGroup>
-            <Label for="lastName">Apellido</Label>
+            <Label for="social_reason">Razón Social</Label>
             <Input 
               type="text" 
               required 
-              name="lastName" 
-              id="lastName" 
-              placeholder="Apellido" 
-              onChange={this.handleChange('lastName')} 
-              value={this.state.formValues.lastName}
+              name="social_reason" 
+              id="social_reason" 
+              placeholder="Razón Social" 
+              onChange={this.handleChange('social_reason')} 
+              value={this.state.formValues.social_reason}
               />
         </FormGroup>
 
@@ -89,18 +90,44 @@ export class Register extends Component {
         </FormGroup>
        
         <FormGroup>
-            <Label for="phone">Telefono</Label>
+            <Label for="address">Dirección</Label>
             <Input 
-              type="number" 
+              type="text" 
+              required 
+              name="address" 
+              id="text" 
+              placeholder="Dirección" 
+              onChange={this.handleChange('address')} 
+              value={this.state.formValues.address}
+            />
+        </FormGroup>
+      
+        <FormGroup>
+            <Label for="comercial_business">Giro comercial</Label>
+            <Input 
+              type="text"
+              required 
+              name="comercial_business" 
+              id="comercial_business" 
+              placeholder="Giro comercial" 
+              onChange={this.handleChange('comercial_business')} 
+              value={this.state.formValues.comercial_business}
+            />
+        </FormGroup>
+
+        <FormGroup>
+            <Label for="phone">Teléfono</Label>
+            <Input 
+              type="number"
               required 
               name="phone" 
               id="phone" 
-              placeholder="123456789" 
+              placeholder="56930799532" 
               onChange={this.handleChange('phone')} 
               value={this.state.formValues.phone}
             />
         </FormGroup>
-      
+
         <FormGroup>
             <Label for="password">Contraseña</Label>
             <Input 
@@ -113,20 +140,11 @@ export class Register extends Component {
               value={this.state.formValues.password}
             />
         </FormGroup>
-
-        <FormGroup>
-            <Label>Rol</Label>
-            <Input type="select" for="id_role" onChange={this.handleChange('id_role')}  value={this.state.formValues.id_role} >Rol
-              <option value='1'> Administrador </option>
-              <option value='2'> Profesional </option>
-            </Input>
-            
-        </FormGroup>
-        <Input type="submit" value="Crear" />
+        <input type="hidden" name="id_role" onChange={this.handleChange} value={this.state.formValues.id_role}></input>
+        <Input type="submit" value="Submit" />
       </Form>
-      <Label> ¿Tienes una cuenta? </Label>
-      <Link to={'/login'}> Ingresa acá </Link>
       </div>
     );
   }
 }
+// 

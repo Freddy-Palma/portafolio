@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace no_mas_accidentes.Models
+namespace no_mas_accidentes.Modelss
 {
     public partial class User
     {

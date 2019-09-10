@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using no_mas_accidentes.Models;
+using no_mas_accidentes.Modelss;
 using Oracle.ManagedDataAccess.Client;
 
 namespace no_mas_accidentes_full.Controllers
@@ -94,6 +95,8 @@ namespace no_mas_accidentes_full.Controllers
             string pass = data["password"].ToObject<string>();
 
             User us = await _context.User.FirstOrDefaultAsync(u => u.Email == email && u.Password == pass);
+
+            Company com = await _context.Company.FirstOrDefaultAsync(c => c.Email == email && c.Password == pass);
             bool success = false;
             string message = "No se ha podido logear";
 
@@ -105,17 +108,26 @@ namespace no_mas_accidentes_full.Controllers
                 message = "Logeado";
                 rol = us.IdRole;
             }
-
+            else
+            {
+                if(com != null)
+                {
+                    success = true;
+                    message = "Logeado";
+                    rol = com.Id_role;
+                }
+            }
+               
             var output = new
             {
                 success,
                 message,
                 rol
             };
-
             return new JsonResult(output);
-        }
 
+        }
+        //[Route("getUserId")]
         [HttpGet("getUser/{id}")]
         public async Task<JsonResult> GetUsers(decimal id)
         {
@@ -168,14 +180,22 @@ namespace no_mas_accidentes_full.Controllers
                 });
             }
 
+
+            string name = data["name"].ToObject<string>();
+            string lastName = data["lastName"].ToObject<string>();
+            string email = data["email"].ToObject<string>();
+            string phone = data["phone"].ToObject<string>();
+            int id_role = data["id_role"].ToObject<int>();
+            string password = data["password"].ToObject<string>();
+
             var us = new
             {
-                name = data["name"].ToObject<string>(),
-                lastName = data["lastName"].ToObject<string>(),
-                email = data["email"].ToObject<string>(),
-                phone = data["phone"].ToObject<string>(),
-                id_role = data["id_role"].ToObject<decimal>(),
-                password = data["password"].ToObject<string>()
+                name,
+                lastName,
+                email,
+                phone,
+                id_role,
+                password
             };
 
             foundUser.Name = us.name;
@@ -201,10 +221,6 @@ namespace no_mas_accidentes_full.Controllers
                     message = "No se ha podido actualizar"
                 });
             }
-            
-            
-
-
         }
     }
 }
