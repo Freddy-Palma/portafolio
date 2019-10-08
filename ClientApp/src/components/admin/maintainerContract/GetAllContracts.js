@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table } from 'reactstrap';
 
-export class GetAllUsers extends Component {
+export class GetAllContracts extends Component {
 
   constructor(props){
     super(props);
@@ -14,7 +14,7 @@ export class GetAllUsers extends Component {
 
     componentWillMount(){
         //event.preventDefault();
-        fetch("http://localhost:51424/api/users/getAllUsers", {
+        fetch("http://localhost:51424/api/Contracts/getAllContracts", {
         method: 'get',
         mode: 'cors',
         })
@@ -29,22 +29,14 @@ export class GetAllUsers extends Component {
     render () 
     {
 
-        const roles = {
-            1: "Administrador",
-            2: "Profesional",
-            3: "Cliente"
-        }
-
         return (
             <Table>
                 <thead>
                 <tr>
-                    <th>RUN</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th>Telefono</th>
+                    <th>RUT</th>
+                    <th>Precio</th>
+                    <th>Cantidad de Visitas</th>
+                    <th>Cantidad de Asesorías</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,15 +44,12 @@ export class GetAllUsers extends Component {
                         this.state.data.map(element => {
                             return (
                                 <tr>
-                                    <td>{ element.run }</td>
-                                    <td>{ element.name }</td>
-                                    <td>{ element.lastname }</td>
-                                    <td>{ element.email }</td>
-                                    <td>{ roles[element.idRole]  }</td>
-                                    <td>{ element.phone }</td>
+                                    <td>{ element.rutCompany }</td>
+                                    <td>{ element.price }</td>
+                                    <td>{ element.numberVisit }</td>
+                                    <td>{ element.numberAsesory }</td>
                                 </tr>
-                            );
-                            
+                            ); 
                         })
                     }
                 </tbody>

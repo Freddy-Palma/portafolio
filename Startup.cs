@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using no_mas_accidentes.Models;
+using no_mas_accidentes.Models12;
 
 namespace no_mas_accidentes
 {

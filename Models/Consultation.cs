@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace no_mas_accidentes.Modelss
+namespace no_mas_accidentes.Models12
 {
     public partial class Consultation
     {
@@ -12,7 +12,7 @@ namespace no_mas_accidentes.Modelss
         public decimal IdProfesional { get; set; }
         public decimal RutCompany { get; set; }
 
-        public virtual Role IdProfesionalNavigation { get; set; }
+        public virtual User IdProfesionalNavigation { get; set; }
         public virtual Company RutCompanyNavigation { get; set; }
     }
 }

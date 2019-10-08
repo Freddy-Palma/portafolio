@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
-using no_mas_accidentes.Models;
-using no_mas_accidentes.Modelss;
+using no_mas_accidentes.Models12;
+//using no_mas_accidentes.Modelss;
 using Oracle.ManagedDataAccess.Client;
 
 namespace no_mas_accidentes_full.Controllers
@@ -32,6 +32,7 @@ namespace no_mas_accidentes_full.Controllers
         {
             try
             {
+                int run = data["run"].ToObject<int>();
                 string name = data["name"].ToObject<string>();
                 string lastName = data["lastName"].ToObject<string>();
                 string email = data["email"].ToObject<string>();
@@ -41,6 +42,7 @@ namespace no_mas_accidentes_full.Controllers
 
                 var us = new
                 {
+                    run,
                     name,
                     lastName,
                     email,
@@ -49,6 +51,7 @@ namespace no_mas_accidentes_full.Controllers
                     password
                 };
                 //await _context.SaveChangesAsync();
+                OracleParameter param0 = new OracleParameter("v_run", OracleDbType.Int32, us.run, ParameterDirection.Input);
                 OracleParameter param1 = new OracleParameter("v_name", OracleDbType.NVarchar2, us.name, ParameterDirection.Input);
                 OracleParameter param2 = new OracleParameter("v_last_name", OracleDbType.NVarchar2, us.lastName, ParameterDirection.Input);
                 OracleParameter param3 = new OracleParameter("v_email", OracleDbType.NVarchar2, us.email, ParameterDirection.Input);
@@ -57,6 +60,7 @@ namespace no_mas_accidentes_full.Controllers
                 OracleParameter param6 = new OracleParameter("v_password", OracleDbType.NVarchar2, us.password, ParameterDirection.Input);
 
                 object[] parameters = new object[] {
+                param0,
                 param1,
                 param2,
                 param3,
@@ -65,7 +69,7 @@ namespace no_mas_accidentes_full.Controllers
                 param6
                 };
 
-                string query = "begin pkg_register.sp_register(:v_name,:v_last_name,:v_email,:v_phone,:v_id_role,:v_password); end; ";
+                string query = "begin pkg_register.sp_register(:v_run,:v_name,:v_last_name,:v_email,:v_phone,:v_id_role,:v_password); end; ";
 
                 int success123 = _context.Database.ExecuteSqlCommand(query, parameters);
 
@@ -86,21 +90,22 @@ namespace no_mas_accidentes_full.Controllers
                 return new JsonResult(response);
             }
         }
-
+        
         [Route("login")]
         [HttpPost]
         public async Task<JsonResult> Login([FromBody]JObject data)
         {
-            string email = data["email"].ToObject<string>();
+            int run = data["run"].ToObject<int>();
             string pass = data["password"].ToObject<string>();
 
-            User us = await _context.User.FirstOrDefaultAsync(u => u.Email == email && u.Password == pass);
+            User us = await _context.User.FirstOrDefaultAsync(u => u.Run == run && u.Password == pass);
 
-            Company com = await _context.Company.FirstOrDefaultAsync(c => c.Email == email && c.Password == pass);
+            Company com = await _context.Company.FirstOrDefaultAsync(c => c.Rut == run && c.Password == pass);
             bool success = false;
             string message = "No se ha podido logear";
 
             decimal rol = 100;
+
 
             if (us != null)
             {
@@ -114,7 +119,7 @@ namespace no_mas_accidentes_full.Controllers
                 {
                     success = true;
                     message = "Logeado";
-                    rol = com.Id_role;
+                    rol = com.IdRole;
                 }
             }
                
@@ -127,12 +132,13 @@ namespace no_mas_accidentes_full.Controllers
             return new JsonResult(output);
 
         }
+        
         //[Route("getUserId")]
-        [HttpGet("getUser/{id}")]
-        public async Task<JsonResult> GetUsers(decimal id)
+        [HttpGet("getUser/{run}")]
+        public async Task<JsonResult> GetUsers(decimal run)
         {
             return new JsonResult(from us in _context.User
-                                  where us.Id == id
+                                  where us.Run == run
                                   select us);
         }
         
@@ -143,12 +149,12 @@ namespace no_mas_accidentes_full.Controllers
             //return new JsonResult(from us in _context.User select us);
         }
 
-        [HttpPost("deleteUsers/{id}")]
-        public async Task<JsonResult> DeleteUser(decimal id)
+        [HttpPost("deleteUsers/{run}")]
+        public async Task<JsonResult> DeleteUser(decimal run)
         {
             //return new JsonResult(await _context.User.ToListAsync());
 
-            User us = await _context.User.FindAsync(id);
+            User us = await _context.User.FindAsync(run);
             if (us == null)
             {
                 return new JsonResult(new
@@ -166,11 +172,11 @@ namespace no_mas_accidentes_full.Controllers
             });
         }
 
-        [HttpPost("updateUser/{id}")]
-        public async Task<JsonResult> UpdateUser(decimal id,JObject data)
+        [HttpPost("updateUser/{run}")]
+        public async Task<JsonResult> UpdateUser(decimal run,JObject data)
         {
 
-            User foundUser = await _context.User.FindAsync(id);
+            User foundUser = await _context.User.FindAsync(run);
             if (foundUser == null)
             {
                 return new JsonResult(new
@@ -179,7 +185,6 @@ namespace no_mas_accidentes_full.Controllers
                     message = "No se ha podido actualizar"
                 });
             }
-
 
             string name = data["name"].ToObject<string>();
             string lastName = data["lastName"].ToObject<string>();

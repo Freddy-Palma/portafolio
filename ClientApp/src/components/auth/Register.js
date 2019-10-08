@@ -8,6 +8,7 @@ export class Register extends Component {
       super(props);
       this.state = {
         formValues: {
+          run:'',
           name: '',
           lastName: '',
           email: '',
@@ -48,7 +49,21 @@ export class Register extends Component {
     return (
       <div>
         <Form onSubmit={this.handleSubmit.bind(this)}>
-        <h1> Registra un Usuario </h1>            
+        <h1> Registra un Usuario </h1>  
+
+        <FormGroup>
+            <Label for="run">RUN</Label>
+            <Input 
+              type="number" 
+              required 
+              name="run" 
+              id="run" 
+              placeholder="RUN" 
+              onChange={this.handleChange('run')} 
+              value={this.state.formValues.run}
+            />
+        </FormGroup>
+
         <FormGroup>
             <Label for="name">Nombre</Label>
             <Input 
@@ -124,8 +139,8 @@ export class Register extends Component {
         </FormGroup>
         <Input type="submit" value="Crear" />
       </Form>
-      <Label> ¿Tienes una cuenta? </Label>
-      <Link to={'/login'}> Ingresa acá </Link>
+      {/* <Label> ¿Tienes una cuenta? </Label> */}
+      {/* <Link to={'/login'}> Ingresa acá </Link> */}
       </div>
     );
   }

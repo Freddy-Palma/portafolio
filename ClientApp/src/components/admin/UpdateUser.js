@@ -8,7 +8,7 @@ export class UpdateUser extends Component {
     super(props);
     this.state = {
       formValues: {
-        id: '',
+        run: '',
         name: '',
         lastName: '',
         email: '',
@@ -30,17 +30,17 @@ export class UpdateUser extends Component {
     formValues[name] = event.target.value;
     this.setState({ formValues });
 
-    if (name == 'id')
+    if (name == 'run')
     {
       this.state.data.forEach(element => {
-        if (element.id == this.state.formValues.id) {
+        if (element.run == this.state.formValues.run) {
           let dataToSet = {
-            id: element.id,
+            run: element.run,
             name: element.name,
             lastName: element.lastname,
             email: element.email,
             phone: element.phone,
-            id_role: element.idRrole,
+            id_role: element.idRole,
             password: element.password
           }
           this.setState({ formValues: dataToSet });
@@ -53,7 +53,7 @@ export class UpdateUser extends Component {
     event.preventDefault();
     console.log(this.state.formValues.id_role);
     
-    fetch("http://localhost:51424/api/Users/updateUser/" + this.state.formValues.id , {
+    fetch("http://localhost:51424/api/Users/updateUser/" + this.state.formValues.run , {
       method: 'post',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
@@ -77,7 +77,7 @@ export class UpdateUser extends Component {
           {
             data: json,
             formValues: {
-              id: json[0].id,
+              run: json[0].run,
               name: json[0].name,
               lastName: json[0].lastname,
               email: json[0].email,
@@ -100,12 +100,12 @@ export class UpdateUser extends Component {
     return (
       <div>
         <h4> Usuario a Actualizar </h4>
-        <Input type="select" ref="user" onChange={this.handleChange('id')}  >
+        <Input type="select" ref="user" onChange={this.handleChange('run')}  >
           {
             this.state.data.map(user => {
               return (
                 <React.Fragment>
-                  <option value={user.id}> {user.name}  </option>
+                  <option value={user.run}> {user.name}  </option>
                   <option hidden value={user.lastName}> {user.lastname} </option>
                 </React.Fragment>
               );
@@ -117,8 +117,8 @@ export class UpdateUser extends Component {
         <Form onSubmit={this.handleSubmit.bind(this)}>
           <h3> Actualizar Usuario </h3>
 
-          <Label> Id </Label>
-          <Input readOnly value={this.state.formValues.id} ></Input>
+          <Label> RUN </Label>
+          <Input readOnly value={this.state.formValues.run} ></Input>
 
           <FormGroup>
             <Label for="name">Nombre</Label>

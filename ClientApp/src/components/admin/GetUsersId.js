@@ -9,7 +9,7 @@ export class GetUsersId extends Component {
     super(props);
     this.state = {
         formValues : {
-            id : ''
+            run : ''
         },
         data : [
 
@@ -24,11 +24,11 @@ export class GetUsersId extends Component {
 
     handleSubmit(event){ 
         event.preventDefault();
-        fetch("http://localhost:51424/api/users/getUser/"+this.state.formValues.id, {
+        fetch("http://localhost:51424/api/users/getUser/"+this.state.formValues.run, {
           method: 'get',
           mode: 'cors',
           headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(this.state.id)
+          body: JSON.stringify(this.state.run)
         })
         .then((response) => response.json())
         .then((json) => this.setState({ 
@@ -38,11 +38,11 @@ export class GetUsersId extends Component {
 
     handleSubmitDelete(event){ 
         event.preventDefault();
-        fetch("http://localhost:51424/api/users/deleteUsers/"+this.state.formValues.id, {
+        fetch("http://localhost:51424/api/users/deleteUsers/"+this.state.formValues.run, {
           method: 'post',
           mode: 'cors',
           headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(this.state.id)
+          body: JSON.stringify(this.state.run)
         })
         .then((response) => response.json())
         .then((json) => this.setState({ 
@@ -65,15 +65,15 @@ export class GetUsersId extends Component {
                     <Form onSubmit={this.handleSubmit.bind(this)}>
                         <h1> Buscar </h1>            
                         <FormGroup>
-                            <Label for="id">ID</Label>
+                            <Label for="run">RUN</Label>
                             <Input 
-                            type="id" 
+                            type="number" 
                             required 
-                            name="id" 
-                            id="id" 
-                            placeholder="id" 
-                            onChange={this.handleChange('id')} 
-                            value={this.state.formValues.id}
+                            name="run" 
+                            id="run" 
+                            placeholder="RUN" 
+                            onChange={this.handleChange('run')} 
+                            value={this.state.formValues.run}
                             />
                         </FormGroup>
                         <Input type="submit" value="Buscar" />
@@ -83,7 +83,7 @@ export class GetUsersId extends Component {
                     <Table>
                         <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>RUN</th>
                             <th>Nombre</th>
                             <th>Apellido</th>
                             <th>Email</th>
@@ -96,7 +96,7 @@ export class GetUsersId extends Component {
                                 this.state.data.map(element => {
                                     return (
                                         <tr>
-                                            <td>{ element.id }</td>
+                                            <td>{ element.run }</td>
                                             <td>{ element.name }</td>
                                             <td>{ element.lastname }</td>
                                             <td>{ element.email }</td>

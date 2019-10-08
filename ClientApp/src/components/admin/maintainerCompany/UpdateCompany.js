@@ -1,185 +1,204 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Input } from 'reactstrap';
-import {Link, Redirect} from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 export class UpdateCompany extends Component {
 
-    constructor(props){
-      super(props);
-      this.state = {
-        formValues: {
-            id : '',
-            name: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            id_role: '',
-            password: ''
-        },
-        data : [
+  constructor(props) {
+    super(props);
+    this.state = {
+      formValues: {
+        rut: '',
+        social_reason: '',
+        email: '',
+        address: '',
+        comercial_business: '',
+        phone: '',
+        id_role: '3',
+        password: ''
+      },
+      data: [
 
-        ],
-        isUpdate : false,
-        isFound : false
-      }
+      ],
+      isUpdate: false,
+      isFound: false
     }
-    
-    handleChange = (name) => (event) => {
-      const { formValues } = this.state;
-      formValues[name] = event.target.value;
-      this.setState({ formValues });
-      this.state.data.forEach(element =>  {
-        if (element.id == this.state.formValues.name) {
-          console.log('llegue');
-          this.setState.name = 'dentro';
-          // this.setState.formValues.lastName = element.lastName;
-          // this.setState.formValues.email = element.email;
-          // this.setState.formValues.phone = element.phone;
-          // this.setState.formValues.password = element.password;
+  }
+
+  handleChange = (name) => (event) => {
+    //console.log("llegue");
+    const { formValues } = this.state;
+    formValues[name] = event.target.value;
+    this.setState({ formValues });
+
+    if (name == 'rut')
+    {
+      this.state.data.forEach(element => {
+        if (element.rut == this.state.formValues.rut) {
+          let dataToSet = {
+            rut: element.rut,
+            social_reason: element.socialReason,
+            email: element.email,
+            address: element.address,
+            comercial_business: element.comercialBusiness,
+            phone: element.phone,
+            password: element.password
+          }
+          this.setState({ formValues: dataToSet });
         }
       });
     }
-
-    
-
-    handleSubmit(event){ 
-        event.preventDefault();
-        fetch("http://localhost:51424/api/Users/updateUser", {
-          method: 'post',
-          mode: 'cors',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(this.state.formValues)
-        })
-        .then((response) => response.json())
-        .then((json) => this.setState({ isUpdate: json.success}));
-    };
-
-    componentWillMount(){
-      //event.preventDefault();
-      fetch("http://localhost:51424/api/users/getAllUsers", {
-      method: 'get',
-      mode: 'cors',
-      })
-      .then((response) => response.json())
-      .then((json) => this.setState({
-          data: json,
-          id : json.id,
-          name: json.name,
-          lastName: json.lastname,
-          email: json.email,
-          phone: json.phone,
-          id_role: json.idRrole,
-          password: json.password
-      }))
-      .catch( e => console.log(e.message)
-      );
-
-      
   }
 
-  render () {
-    if (this.state.isUpdate)
-    {
-      return <Redirect to='/'/>
+  handleSubmit(event) {
+    event.preventDefault();
+    //console.log(this.state.formValues.rut);
+    
+    fetch("http://localhost:51424/api/Companies/updateCompany/" + this.state.formValues.rut , {
+      method: 'post',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(this.state.formValues)
+    })
+      .then((response) => response.json())
+      .then((json) => this.setState({ isUpdate: json.success }));
+      
+  };
+
+  componentWillMount() {
+    //event.preventDefault();
+    fetch("http://localhost:51424/api/Companies/getAllcompanies", {
+      method: 'get',
+      mode: 'cors',
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        //console.log(json[0].id);
+        this.setState(
+          {
+            data: json,
+            formValues: {
+              rut: json[0].rut,
+              social_reason: json[0].socialReason,
+              email: json[0].email,
+              address: json[0].address,
+              comercial_business: json[0].comercialBusiness,
+              phone: json[0].phone,
+              password: json[0].password
+            }
+          })
+      }
+      )
+      .catch(e => console.log(e.message)
+      );
+  }
+
+  render() {
+    if (this.state.isUpdate) {
+      return <Redirect to='/' />
     }
 
     return (
       <div>
-          <h4> Usuario a Actualizar </h4>
-          <Input type="select" ref="user" onChange={this.handleChange('lastName' ) }  >
+        <h4> Empresa a Actualizar </h4>
+        <Input type="select" ref="company" onChange={this.handleChange('rut')}  >
           {
-            this.state.data.map(user => {
-                return (
-                  <React.Fragment>
-                    <option value={user.id}> {user.name}  </option>
-                    <option hidden value={user.lastName}> {user.lastname} </option>
-                  </React.Fragment>
-                );
-                
+            this.state.data.map(company => {
+              return (
+                <React.Fragment>
+                  <option value={company.rut}> {company.socialReason}  </option>
+                </React.Fragment>
+              );
+
             })
           }
-          </Input>
-          <br></br>
-          <Form onSubmit={this.handleSubmit.bind(this)}>
-            <h3> Actualizar Usuario </h3> 
+        </Input>
+        <br></br>
+        <Form onSubmit={this.handleSubmit.bind(this)}>
+          <h3> Actualizar Empresa </h3>
 
-            <Label> Id </Label>
-            <Input readOnly value={ this.state.formValues.id} ></Input>
+          <Label> Rut </Label>
+          <Input readOnly value={this.state.formValues.rut} ></Input><br></br>
 
-            <FormGroup>
-                <Label for="name">Nombre</Label>
-                <Input 
-                type="text" 
-                required 
-                name="name" 
-                id="name" 
-                placeholder="Nombre" 
-                onChange={this.handleChange('name')} 
-                value={ this.state.formValues.name }
-                />
-            </FormGroup>
+          <FormGroup>
+            <Label for="social_reason">Razón Social</Label>
+            <Input
+              type="text"
+              required
+              name="social_reason"
+              id="social_reason"
+              placeholder="Razón Social"
+              onChange={this.handleChange('social_reason')}
+              value={this.state.formValues.social_reason}
+            />
+          </FormGroup>
 
-            <FormGroup>
-                <Label for="lastName">Apellido</Label>
-                <Input 
-                type="text" 
-                required 
-                name="lastName" 
-                id="lastName" 
-                placeholder="Apellido" 
-                onChange={this.handleChange('lastName')} 
-                value={this.state.formValues.lastName}
-                />
-            </FormGroup>
+          <FormGroup>
+            <Label for="email">Email</Label>
+            <Input
+              type="email"
+              required
+              name="email"
+              id="email"
+              placeholder="email"
+              onChange={this.handleChange('email')}
+              value={this.state.formValues.email}
+            />
+          </FormGroup>
 
-            <FormGroup>
-                <Label for="email">Email</Label>
-                <Input 
-                type="email" 
-                required 
-                name="email" 
-                id="email" 
-                placeholder="email@email.cl" 
-                onChange={this.handleChange('email')} 
-                value={this.state.formValues.email} 
-                />
-            </FormGroup>
-        
-            <FormGroup>
-                <Label for="phone">Telefono</Label>
-                <Input 
-                type="number" 
-                required 
-                name="phone" 
-                id="phone" 
-                placeholder="123456789" 
-                onChange={this.handleChange('phone')} 
-                value={this.state.formValues.phone}
-                />
-            </FormGroup>
-        
-            <FormGroup>
-                <Label for="password">Contraseña</Label>
-                <Input 
-                type="password"
-                required 
-                name="password" 
-                id="password" 
-                placeholder="****" 
-                onChange={this.handleChange('password')} 
-                value={this.state.formValues.password}
-                />
-            </FormGroup>
+          <FormGroup>
+            <Label for="address">Direccion</Label>
+            <Input
+              type="text"
+              required
+              name="address"
+              id="address"
+              placeholder="Dirección"
+              onChange={this.handleChange('address')}
+              value={this.state.formValues.address}
+            />
+          </FormGroup>
 
-            <FormGroup>
-                <Label>Rol</Label>
-                <Input type="select" for="id_role" onChange={this.handleChange('id_role')}  value={this.state.formValues.id_role} >Rol
-                <option value='1'> Administrador </option>
-                <option value='2'> Profesional </option>
-                </Input>
-                
-            </FormGroup>
-            <Input type="submit" value="Actualizar" />
+          <FormGroup>
+            <Label for="comercial_business">Giro Comercial</Label>
+            <Input
+              type="text"
+              required
+              name="comercial_business"
+              id="comercial_business"
+              placeholder="comercial_business"
+              onChange={this.handleChange('comercial_business')}
+              value={this.state.formValues.comercial_business}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="phone">Telefono</Label>
+            <Input
+              type="number"
+              required
+              name="phone"
+              id="phone"
+              placeholder="123456789"
+              onChange={this.handleChange('phone')}
+              value={this.state.formValues.phone}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="password">Contraseña</Label>
+            <Input
+              type="password"
+              required
+              name="password"
+              id="password"
+              placeholder="****"
+              onChange={this.handleChange('password')}
+              value={this.state.formValues.password}
+            />
+          </FormGroup>
+
+          <Input type="submit" value="Actualizar" />
         </Form>
       </div>
     );

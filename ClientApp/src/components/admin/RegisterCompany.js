@@ -36,8 +36,30 @@ export class RegisterCompany extends Component {
           body: JSON.stringify(this.state.formValues)
         })
         .then((response) => response.json())
-        .then((json) => this.setState({ isLogged: json.success}));
+        .then((json) => this.setState({ isRegister: json.success}));
     };
+
+    componentWillMount() {
+      //event.preventDefault();
+      fetch("http://localhost:51424/api/users/getAllUsersClient", {
+        method: 'get',
+        mode: 'cors',
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          //console.log(json[0].id);
+          this.setState(
+            {
+              data: json,
+              formValues: {
+                run_client: json[0].rut
+              }
+            })
+        }
+        )
+        .catch(e => console.log(e.message)
+        );
+    }
 
   render () {
 
@@ -140,8 +162,9 @@ export class RegisterCompany extends Component {
               value={this.state.formValues.password}
             />
         </FormGroup>
+
         <input type="hidden" name="id_role" onChange={this.handleChange} value={this.state.formValues.id_role}></input>
-        <Input type="submit" value="Submit" />
+        <Input type="submit" value="Registrar" />
       </Form>
       </div>
     );

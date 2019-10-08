@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
-using no_mas_accidentes.Models;
-using no_mas_accidentes.Modelss;
+using no_mas_accidentes.Models12;
+//using no_mas_accidentes.Modelss;
 using Oracle.ManagedDataAccess.Client;
 
 namespace no_mas_accidentes.Controllers
@@ -55,8 +55,8 @@ namespace no_mas_accidentes.Controllers
                 OracleParameter param_rut = new OracleParameter("v_rut", OracleDbType.NVarchar2, com.rut, ParameterDirection.Input);
                 OracleParameter param_social_reason = new OracleParameter("v_social_reason", OracleDbType.NVarchar2, com.social_reason, ParameterDirection.Input);
                 OracleParameter param_email = new OracleParameter("v_email", OracleDbType.NVarchar2, com.email, ParameterDirection.Input);
-                OracleParameter param_address = new OracleParameter("v_address", OracleDbType.Long, com.address, ParameterDirection.Input);
-                OracleParameter param_comercial_business = new OracleParameter("v_comercial_business", OracleDbType.Long, com.comercial_business, ParameterDirection.Input);
+                OracleParameter param_address = new OracleParameter("v_address", OracleDbType.NVarchar2, com.address, ParameterDirection.Input);
+                OracleParameter param_comercial_business = new OracleParameter("v_comercial_business", OracleDbType.NVarchar2, com.comercial_business, ParameterDirection.Input);
                 OracleParameter param_phone = new OracleParameter("v_phone", OracleDbType.NVarchar2, com.phone, ParameterDirection.Input);
                 OracleParameter param_id_role = new OracleParameter("v_id_role", OracleDbType.NVarchar2, com.id_role, ParameterDirection.Input);
                 OracleParameter param_password = new OracleParameter("v_password", OracleDbType.NVarchar2, com.password, ParameterDirection.Input);
@@ -132,11 +132,11 @@ namespace no_mas_accidentes.Controllers
             });
         }
 
-        [HttpPost("updateCompany/{rut}")]
-        public async Task<JsonResult> UpdateCompany(decimal rut, JObject data)
+        [HttpPost("updateCompany/{id}")]
+        public async Task<JsonResult> UpdateCompany(decimal id, JObject data)
         {
 
-            Company companyFound = await _context.Company.FindAsync(rut);
+            Company companyFound = await _context.Company.FindAsync(id);
 
             if (companyFound == null)
             {
@@ -147,16 +147,25 @@ namespace no_mas_accidentes.Controllers
                 });
             }
 
+
+            string address = data["address"].ToObject<string>();
+            string comercial_business = data["comercial_business"].ToObject<string>();
+            string email = data["email"].ToObject<string>();
+            string password = data["password"].ToObject<string>();
+            string phone = data["phone"].ToObject<string>();
+            decimal rut = data["rut"].ToObject<decimal>();
+            string social_reason = data["social_reason"].ToObject<string>();
+            //int id_role = data["id_role"].ToObject<int>();
+
             var com = new
             {
-                rut = data["rut"].ToObject<decimal>(),
-                social_reason = data["social_reason"].ToObject<string>(),
-                email = data["email"].ToObject<string>(),
-                address = data["address"].ToObject<string>(),
-                comercial_business = data["comercial_business"].ToObject<string>(),
-                phone = data["phone"].ToObject<string>(),
-                id_role = data["id_role"].ToObject<decimal>(),
-                password = data["password"].ToObject<string>()
+                rut,
+                social_reason,
+                email,
+                address,
+                comercial_business,
+                phone,
+                password
             };
 
             companyFound.Rut = com.rut;
@@ -165,7 +174,7 @@ namespace no_mas_accidentes.Controllers
             companyFound.Address = com.address;
             companyFound.ComercialBusiness = com.comercial_business;
             companyFound.Phone = com.phone;
-            companyFound.Id_role = com.id_role;
+            //companyFound.Id_role = com.id_role;
             companyFound.Password = com.password;
 
             if (await _context.SaveChangesAsync() > 0)

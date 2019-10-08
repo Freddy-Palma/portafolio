@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace no_mas_accidentes.Modelss
+namespace no_mas_accidentes.Models12
 {
     public partial class Accident
     {

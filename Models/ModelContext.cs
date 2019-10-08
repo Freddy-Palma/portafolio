@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using no_mas_accidentes.Modelss;
 
-namespace no_mas_accidentes.Models
+namespace no_mas_accidentes.Models12
 {
     public partial class ModelContext : DbContext
     {
@@ -19,14 +18,14 @@ namespace no_mas_accidentes.Models
         public virtual DbSet<Accident> Accident { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<Consultation> Consultation { get; set; }
+        public virtual DbSet<Contract> Contract { get; set; }
+        public virtual DbSet<Improve> Improve { get; set; }
         public virtual DbSet<Pay> Pay { get; set; }
+        public virtual DbSet<RequestActivities> RequestActivities { get; set; }
         public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Task> Task { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Visit> Visit { get; set; }
-
-        // Unable to generate entity type for table 'PORTAFOLIO2.REQUEST_ACTIVITIES'. Please see the warning messages.
-        // Unable to generate entity type for table 'PORTAFOLIO2.IMPROVE'. Please see the warning messages.
-        // Unable to generate entity type for table 'PORTAFOLIO2.TASK'. Please see the warning messages.
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -57,7 +56,7 @@ namespace no_mas_accidentes.Models
 
                 entity.Property(e => e.DateAccident)
                     .HasColumnName("DATE_ACCIDENT")
-                    .HasColumnType("TIMESTAMP(6)");
+                    .HasColumnType("DATE");
 
                 entity.Property(e => e.IdCompany)
                     .HasColumnName("ID_COMPANY")
@@ -115,7 +114,7 @@ namespace no_mas_accidentes.Models
                     .HasColumnName("EMAIL")
                     .HasColumnType("NVARCHAR2(255)");
 
-                entity.Property(e => e.Id_role)
+                entity.Property(e => e.IdRole)
                     .HasColumnName("ID_ROLE")
                     .HasColumnType("NUMBER(38)");
 
@@ -136,7 +135,7 @@ namespace no_mas_accidentes.Models
 
                 entity.HasOne(d => d.IdRoleNavigation)
                     .WithMany(p => p.Company)
-                    .HasForeignKey(d => d.Id_role)
+                    .HasForeignKey(d => d.IdRole)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ID_ROLE_COMPANY_FK");
             });
@@ -156,7 +155,7 @@ namespace no_mas_accidentes.Models
 
                 entity.Property(e => e.DateAsesory)
                     .HasColumnName("DATE_ASESORY")
-                    .HasColumnType("TIMESTAMP(6)");
+                    .HasColumnType("DATE");
 
                 entity.Property(e => e.IdProfesional)
                     .HasColumnName("ID_PROFESIONAL")
@@ -187,6 +186,66 @@ namespace no_mas_accidentes.Models
                     .HasForeignKey(d => d.RutCompany)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ID_COMPANY_FK_CONSULTATION");
+            });
+
+            modelBuilder.Entity<Contract>(entity =>
+            {
+                entity.ToTable("CONTRACT");
+
+                entity.HasIndex(e => e.Id)
+                    .HasName("ID_CONTRACT_PK")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.NumberAsesory)
+                    .HasColumnName("NUMBER_ASESORY")
+                    .HasColumnType("NUMBER(38)");
+
+                entity.Property(e => e.NumberVisit)
+                    .HasColumnName("NUMBER_VISIT")
+                    .HasColumnType("NUMBER(38)");
+
+                entity.Property(e => e.Price)
+                    .HasColumnName("PRICE")
+                    .HasColumnType("NUMBER(38)");
+
+                entity.Property(e => e.RutCompany)
+                    .HasColumnName("RUT_COMPANY")
+                    .HasColumnType("NUMBER(38)");
+
+                entity.HasOne(d => d.RutCompanyNavigation)
+                    .WithMany(p => p.Contract)
+                    .HasForeignKey(d => d.RutCompany)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("RUT_COMPANY_CONTRACT");
+            });
+
+            modelBuilder.Entity<Improve>(entity =>
+            {
+                entity.ToTable("IMPROVE");
+
+                entity.HasIndex(e => e.Id)
+                    .HasName("ID_IMPROVE_PK")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasColumnType("NVARCHAR2(255)");
+
+                entity.Property(e => e.TypeImprove)
+                    .IsRequired()
+                    .HasColumnName("TYPE_IMPROVE")
+                    .HasColumnType("NVARCHAR2(255)");
             });
 
             modelBuilder.Entity<Pay>(entity =>
@@ -221,6 +280,40 @@ namespace no_mas_accidentes.Models
                     .HasConstraintName("ID_COMPANY2");
             });
 
+            modelBuilder.Entity<RequestActivities>(entity =>
+            {
+                entity.ToTable("REQUEST_ACTIVITIES");
+
+                entity.HasIndex(e => e.Id)
+                    .HasName("ID_REQUEST_ACTIVITIES_PK")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasColumnType("NUMBER(38)")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.IdCompany)
+                    .HasColumnName("ID_COMPANY")
+                    .HasColumnType("NUMBER(38)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("NAME")
+                    .HasColumnType("NVARCHAR2(255)");
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasColumnName("TYPE")
+                    .HasColumnType("NVARCHAR2(255)");
+
+                entity.HasOne(d => d.IdCompanyNavigation)
+                    .WithMany(p => p.RequestActivities)
+                    .HasForeignKey(d => d.IdCompany)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ID_COMPANY3");
+            });
+
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.ToTable("role");
@@ -240,18 +333,48 @@ namespace no_mas_accidentes.Models
                     .HasColumnType("NVARCHAR2(255)");
             });
 
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<Task>(entity =>
             {
-                entity.ToTable("user");
+                entity.ToTable("TASK");
 
                 entity.HasIndex(e => e.Id)
-                    .HasName("ID_USER_PK")
+                    .HasName("ID_TASK_PK")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasColumnType("NUMBER(38)")
                     .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Description)
+                    .HasColumnName("DESCRIPTION")
+                    .HasColumnType("NVARCHAR2(255)");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasColumnName("STATUS")
+                    .HasColumnType("NVARCHAR2(255)");
+
+                entity.Property(e => e.TypeTask)
+                    .IsRequired()
+                    .HasColumnName("TYPE_TASK")
+                    .HasColumnType("NVARCHAR2(255)");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Run)
+                    .HasName("ID_USER_PK");
+
+                entity.ToTable("user");
+
+                entity.HasIndex(e => e.Run)
+                    .HasName("ID_USER_PK")
+                    .IsUnique();
+
+                entity.Property(e => e.Run)
+                    .HasColumnName("RUN")
+                    .HasColumnType("NUMBER(38)");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -304,7 +427,7 @@ namespace no_mas_accidentes.Models
 
                 entity.Property(e => e.DateVisit)
                     .HasColumnName("DATE_VISIT")
-                    .HasColumnType("TIMESTAMP(6)");
+                    .HasColumnType("DATE");
 
                 entity.Property(e => e.IdCompany)
                     .HasColumnName("ID_COMPANY")
@@ -312,10 +435,6 @@ namespace no_mas_accidentes.Models
 
                 entity.Property(e => e.IdProfessional)
                     .HasColumnName("ID_PROFESSIONAL")
-                    .HasColumnType("NUMBER(38)");
-
-                entity.Property(e => e.MeetingNumber)
-                    .HasColumnName("MEETING_NUMBER")
                     .HasColumnType("NUMBER(38)");
 
                 entity.Property(e => e.Name)
@@ -397,6 +516,160 @@ namespace no_mas_accidentes.Models
             modelBuilder.HasSequence("ISEQ$$_74960");
 
             modelBuilder.HasSequence("ISEQ$$_74963");
+
+            modelBuilder.HasSequence("ISEQ$$_75559");
+
+            modelBuilder.HasSequence("ISEQ$$_75655");
+
+            modelBuilder.HasSequence("ISEQ$$_75845");
+
+            modelBuilder.HasSequence("ISEQ$$_75850");
+
+            modelBuilder.HasSequence("ISEQ$$_75853");
+
+            modelBuilder.HasSequence("ISEQ$$_75856");
+
+            modelBuilder.HasSequence("ISEQ$$_75859");
+
+            modelBuilder.HasSequence("ISEQ$$_75862");
+
+            modelBuilder.HasSequence("ISEQ$$_75865");
+
+            modelBuilder.HasSequence("ISEQ$$_75867");
+
+            modelBuilder.HasSequence("ISEQ$$_75869");
+
+            modelBuilder.HasSequence("ISEQ$$_75871");
+
+            modelBuilder.HasSequence("ISEQ$$_75876");
+
+            modelBuilder.HasSequence("ISEQ$$_75881");
+
+            modelBuilder.HasSequence("ISEQ$$_75884");
+
+            modelBuilder.HasSequence("ISEQ$$_75887");
+
+            modelBuilder.HasSequence("ISEQ$$_75890");
+
+            modelBuilder.HasSequence("ISEQ$$_75893");
+
+            modelBuilder.HasSequence("ISEQ$$_75896");
+
+            modelBuilder.HasSequence("ISEQ$$_75899");
+
+            modelBuilder.HasSequence("ISEQ$$_75902");
+
+            modelBuilder.HasSequence("ISEQ$$_75905");
+
+            modelBuilder.HasSequence("ISEQ$$_75977");
+
+            modelBuilder.HasSequence("ISEQ$$_76004");
+
+            modelBuilder.HasSequence("ISEQ$$_76183");
+
+            modelBuilder.HasSequence("ISEQ$$_76188");
+
+            modelBuilder.HasSequence("ISEQ$$_76191");
+
+            modelBuilder.HasSequence("ISEQ$$_76194");
+
+            modelBuilder.HasSequence("ISEQ$$_76197");
+
+            modelBuilder.HasSequence("ISEQ$$_76200");
+
+            modelBuilder.HasSequence("ISEQ$$_76203");
+
+            modelBuilder.HasSequence("ISEQ$$_76206");
+
+            modelBuilder.HasSequence("ISEQ$$_76209");
+
+            modelBuilder.HasSequence("ISEQ$$_76212");
+
+            modelBuilder.HasSequence("ISEQ$$_76215");
+
+            modelBuilder.HasSequence("ISEQ$$_76218");
+
+            modelBuilder.HasSequence("ISEQ$$_76223");
+
+            modelBuilder.HasSequence("ISEQ$$_76226");
+
+            modelBuilder.HasSequence("ISEQ$$_76229");
+
+            modelBuilder.HasSequence("ISEQ$$_76232");
+
+            modelBuilder.HasSequence("ISEQ$$_76235");
+
+            modelBuilder.HasSequence("ISEQ$$_76238");
+
+            modelBuilder.HasSequence("ISEQ$$_76241");
+
+            modelBuilder.HasSequence("ISEQ$$_76244");
+
+            modelBuilder.HasSequence("ISEQ$$_76247");
+
+            modelBuilder.HasSequence("ISEQ$$_76405");
+
+            modelBuilder.HasSequence("ISEQ$$_76410");
+
+            modelBuilder.HasSequence("ISEQ$$_76413");
+
+            modelBuilder.HasSequence("ISEQ$$_76416");
+
+            modelBuilder.HasSequence("ISEQ$$_76419");
+
+            modelBuilder.HasSequence("ISEQ$$_76422");
+
+            modelBuilder.HasSequence("ISEQ$$_76425");
+
+            modelBuilder.HasSequence("ISEQ$$_76428");
+
+            modelBuilder.HasSequence("ISEQ$$_76431");
+
+            modelBuilder.HasSequence("ISEQ$$_76434");
+
+            modelBuilder.HasSequence("ISEQ$$_76440");
+
+            modelBuilder.HasSequence("ISEQ$$_76511");
+
+            modelBuilder.HasSequence("ISEQ$$_76521");
+
+            modelBuilder.HasSequence("ISEQ$$_76524");
+
+            modelBuilder.HasSequence("ISEQ$$_76529");
+
+            modelBuilder.HasSequence("ISEQ$$_76536");
+
+            modelBuilder.HasSequence("ISEQ$$_76539");
+
+            modelBuilder.HasSequence("ISEQ$$_76542");
+
+            modelBuilder.HasSequence("ISEQ$$_76545");
+
+            modelBuilder.HasSequence("ISEQ$$_76548");
+
+            modelBuilder.HasSequence("ISEQ$$_76551");
+
+            modelBuilder.HasSequence("ISEQ$$_76554");
+
+            modelBuilder.HasSequence("ISEQ$$_76557");
+
+            modelBuilder.HasSequence("ISEQ$$_76576");
+
+            modelBuilder.HasSequence("ISEQ$$_76583");
+
+            modelBuilder.HasSequence("ISEQ$$_76586");
+
+            modelBuilder.HasSequence("ISEQ$$_76589");
+
+            modelBuilder.HasSequence("ISEQ$$_76592");
+
+            modelBuilder.HasSequence("ISEQ$$_76595");
+
+            modelBuilder.HasSequence("ISEQ$$_76598");
+
+            modelBuilder.HasSequence("ISEQ$$_76601");
+
+            modelBuilder.HasSequence("ISEQ$$_76604");
         }
     }
 }

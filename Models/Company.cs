@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace no_mas_accidentes.Modelss
+namespace no_mas_accidentes.Models12
 {
     public partial class Company
     {
@@ -9,7 +9,9 @@ namespace no_mas_accidentes.Modelss
         {
             Accident = new HashSet<Accident>();
             Consultation = new HashSet<Consultation>();
+            Contract = new HashSet<Contract>();
             Pay = new HashSet<Pay>();
+            RequestActivities = new HashSet<RequestActivities>();
             Visit = new HashSet<Visit>();
         }
 
@@ -19,13 +21,15 @@ namespace no_mas_accidentes.Modelss
         public string Address { get; set; }
         public string ComercialBusiness { get; set; }
         public string Phone { get; set; }
-        public decimal Id_role { get; set; }
+        public decimal IdRole { get; set; }
         public string Password { get; set; }
 
         public virtual Role IdRoleNavigation { get; set; }
         public virtual ICollection<Accident> Accident { get; set; }
         public virtual ICollection<Consultation> Consultation { get; set; }
+        public virtual ICollection<Contract> Contract { get; set; }
         public virtual ICollection<Pay> Pay { get; set; }
+        public virtual ICollection<RequestActivities> RequestActivities { get; set; }
         public virtual ICollection<Visit> Visit { get; set; }
     }
 }
